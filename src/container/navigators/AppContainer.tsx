@@ -1,5 +1,6 @@
 import {StyleSheet, Text, View, Image, Pressable} from 'react-native';
-import React, {FC} from 'react';
+import React, {FC, useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 // import {mTabBarOptions} from '../../res/styles/TabBarOptions';
@@ -10,13 +11,16 @@ import sizes from '../../res/sizes/sizes';
 import ScreensHome from '../screens/ScreensHome';
 import ScreensProduct from '../screens/ScreensProduct';
 import ScreenCart from '../screens/ScreenCart';
-import ScreenNewspaper from '../screens/ScreenNewspaper';
-import ScreenAccount from '../screens/ScreenAccount';
+import ScreenNewspaper from '../screens/spaper/ScreenNewspaper';
+import {loadProducts} from '../../store/actions/productsActions';
+import ScreenAccount from '../screens/account/ScreenAccount';
+import {useRoute} from '@react-navigation/native';
+import {loadProvince} from '../../store/actions/addressActions';
 
 // const Tab = createBottomTabNavigator();
 const bottomTab = createBottomTabNavigator();
 
-const mTabBarOptions = {
+const mTabBarOptions: any = {
   tabBarShowLabel: false,
   tabBarActiveTintColor: '#fff',
   tabBarStyle: {
@@ -36,10 +40,21 @@ const mTabBarOptions = {
 };
 
 const AppContainer: FC = () => {
-  const [index, setIndex] = React.useState(20);
+  const {numberCart} = useSelector((state: any) => state.product);
+  const dispatch: any = useDispatch();
+
+  useEffect(() => {
+    dispatch(loadProducts());
+    dispatch(loadProvince());
+  }, []);
+
+  const route: any = useRoute();
+  const initScreen = route.params?.screen;
 
   return (
-    <bottomTab.Navigator screenOptions={mTabBarOptions}>
+    <bottomTab.Navigator
+      screenOptions={mTabBarOptions}
+      initialRouteName={initScreen != null ? initScreen : 'HomeScreen'}>
       <bottomTab.Screen
         name="HomeScreen"
         component={ScreensHome}
@@ -58,16 +73,17 @@ const AppContainer: FC = () => {
                   width: sizes._24sdp,
                   height: sizes._24sdp,
                   tintColor: focused
-                    ? ArrayColors._color_black_gray11
-                    : ArrayColors._color_white_gray,
+                    ? ArrayColors._color_black
+                    : ArrayColors._color_un_active,
                 }}
               />
               <Text
                 style={{
                   color: focused
-                    ? ArrayColors._color_black_gray11
-                    : ArrayColors._color_white_gray,
+                    ? ArrayColors._color_black
+                    : ArrayColors._color_un_active,
                   fontWeight: '700',
+                  fontFamily: 'OpenSans-Bold',
                   fontSize: sizes._15sdp,
                 }}>
                 Trang chủ
@@ -95,16 +111,17 @@ const AppContainer: FC = () => {
                   height: sizes._24sdp,
 
                   tintColor: focused
-                    ? ArrayColors._color_black_gray11
-                    : ArrayColors._color_white_gray,
+                    ? ArrayColors._color_black
+                    : ArrayColors._color_un_active,
                 }}
               />
               <Text
                 style={{
                   color: focused
-                    ? ArrayColors._color_black_gray11
-                    : ArrayColors._color_white_gray,
+                    ? ArrayColors._color_black
+                    : ArrayColors._color_un_active,
                   fontWeight: '700',
+                  fontFamily: 'OpenSans-Bold',
                   fontSize: sizes._15sdp,
                 }}>
                 Sản phẩm
@@ -117,7 +134,7 @@ const AppContainer: FC = () => {
         name="ScreenCart"
         component={ScreenCart}
         options={{
-          tabBarBadge: index, //index giỏ hàng
+          tabBarBadge: numberCart == 0 ? null : numberCart,
           tabBarIcon: ({focused}) => (
             <View
               style={{
@@ -132,16 +149,17 @@ const AppContainer: FC = () => {
                   width: sizes._24sdp,
                   height: sizes._24sdp,
                   tintColor: focused
-                    ? ArrayColors._color_black_gray11
-                    : ArrayColors._color_white_gray,
+                    ? ArrayColors._color_black
+                    : ArrayColors._color_un_active,
                 }}
               />
               <Text
                 style={{
                   color: focused
-                    ? ArrayColors._color_black_gray11
-                    : ArrayColors._color_white_gray,
+                    ? ArrayColors._color_black
+                    : ArrayColors._color_un_active,
                   fontWeight: '700',
+                  fontFamily: 'OpenSans-Bold',
                   fontSize: sizes._15sdp,
                 }}>
                 Giỏ hàng
@@ -168,16 +186,17 @@ const AppContainer: FC = () => {
                   width: sizes._24sdp,
                   height: sizes._24sdp,
                   tintColor: focused
-                    ? ArrayColors._color_black_gray11
-                    : ArrayColors._color_white_gray,
+                    ? ArrayColors._color_black
+                    : ArrayColors._color_un_active,
                 }}
               />
               <Text
                 style={{
                   color: focused
-                    ? ArrayColors._color_black_gray11
-                    : ArrayColors._color_white_gray,
+                    ? ArrayColors._color_black
+                    : ArrayColors._color_un_active,
                   fontWeight: '700',
+                  fontFamily: 'OpenSans-Bold',
                   fontSize: sizes._15sdp,
                 }}>
                 Xã hội
@@ -205,16 +224,17 @@ const AppContainer: FC = () => {
                   width: sizes._24sdp,
                   height: sizes._24sdp,
                   tintColor: focused
-                    ? ArrayColors._color_black_gray11
-                    : ArrayColors._color_white_gray,
+                    ? ArrayColors._color_black
+                    : ArrayColors._color_un_active,
                 }}
               />
               <Text
                 style={{
                   color: focused
-                    ? ArrayColors._color_black_gray11
-                    : ArrayColors._color_white_gray,
+                    ? ArrayColors._color_black
+                    : ArrayColors._color_un_active,
                   fontWeight: '700',
+                  fontFamily: 'OpenSans-Bold',
                   fontSize: sizes._15sdp,
                 }}>
                 Tài khoản
